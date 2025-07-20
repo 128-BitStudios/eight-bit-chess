@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support - 8bit Chess Puzzles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #000000;
+            color: #ffffff;
+            overflow-x: hidden;
+            line-height: 1.8;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated 8-bit Background */
+        .bg-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(45deg, transparent 40%, rgba(139, 92, 246, 0.03) 41%, rgba(139, 92, 246, 0.03) 42%, transparent 43%),
+                linear-gradient(-45deg, transparent 40%, rgba(255, 0, 110, 0.03) 41%, rgba(255, 0, 110, 0.03) 42%, transparent 43%),
+                linear-gradient(90deg, transparent 48%, rgba(0, 255, 255, 0.02) 49%, rgba(0, 255, 255, 0.02) 51%, transparent 52%);
+            background-size: 20px 20px, 20px 20px, 40px 40px;
+            animation: pixelMove 20s linear infinite;
+        }
+
+        @keyframes pixelMove {
+            0% { background-position: 0 0, 0 0, 0 0; }
+            100% { background-position: 20px 20px, -20px 20px, 40px 0; }
+        }
+
+        /* Floating pixels */
+        .floating-pixels {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .pixel {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #8B5CF6;
+            opacity: 0.6;
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .pixel:nth-child(2n) { background: #ff006e; animation-delay: -2s; }
+        .pixel:nth-child(3n) { background: #00ffff; animation-delay: -4s; }
+        .pixel:nth-child(4n) { background: #FFD700; animation-delay: -6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        /* Header with logo */
+        .header {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            z-index: 100;
+        }
+
+        .header-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 16px;
+            box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+            transition: all 0.3s ease;
+            filter: drop-shadow(0 0 10px rgba(139, 92, 246, 0.5));
+        }
+
+        .header-logo:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.6);
+        }
+
+        /* Navigation */
+        .nav-header {
+            text-align: center;
+            margin: 120px auto 40px;
+            padding: 20px;
+            max-width: 900px;
+        }
+
+        .back-link {
+            color: #00ffff;
+            text-decoration: none;
+            font-size: clamp(8px, 1.2vw, 12px);
+            padding: 12px 24px;
+            border: 1px solid #00ffff;
+            border-radius: 8px;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .back-link:hover {
+            background: rgba(0, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* Main container */
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 60px 60px;
+            background: rgba(42, 42, 58, 0.3);
+            border-radius: 30px;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        /* Page header */
+        .page-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .page-title {
+            font-size: clamp(24px, 3vw, 48px);
+            color: #FFD700;
+            text-shadow: 
+                0 0 5px rgba(255, 215, 0, 0.5),
+                0 0 10px rgba(255, 215, 0, 0.3),
+                0 0 20px rgba(255, 215, 0, 0.2);
+            margin-bottom: 20px;
+            line-height: 1.2;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 5px rgba(255, 215, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3), 0 0 20px rgba(255, 215, 0, 0.2); }
+            100% { text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 15px rgba(255, 215, 0, 0.5), 0 0 25px rgba(255, 215, 0, 0.3); }
+        }
+
+        .page-subtitle {
+            font-size: clamp(12px, 2vw, 20px);
+            color: #ff006e;
+            text-shadow: 0 0 8px rgba(255, 0, 110, 0.4);
+            margin-bottom: 10px;
+            animation: subtitlePulse 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes subtitlePulse {
+            0% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        .page-tagline {
+            font-size: clamp(8px, 1.3vw, 14px);
+            color: #00ffff;
+            text-shadow: 0 0 6px rgba(0, 255, 255, 0.3);
+        }
+
+        /* Section headers */
+        h2 {
+            color: #8B5CF6;
+            font-size: clamp(12px, 1.8vw, 18px);
+            margin: 40px 0 20px 0;
+            text-shadow: 0 0 8px rgba(139, 92, 246, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Contact info section */
+        .contact-info {
+            background: rgba(139, 92, 246, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            backdrop-filter: blur(10px);
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .contact-info:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(139, 92, 246, 0.3);
+        }
+
+        .contact-item {
+            font-size: clamp(8px, 1.2vw, 12px);
+            color: #ffffff;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-icon {
+            color: #8B5CF6;
+            font-size: clamp(6px, 1vw, 10px);
+            animation: iconBlink 2s infinite;
+        }
+
+        @keyframes iconBlink {
+            0%, 90% { opacity: 1; }
+            95% { opacity: 0.3; }
+        }
+
+        /* FAQ items */
+        .faq-item {
+            margin-bottom: 25px;
+            padding: 25px;
+            background: rgba(42, 42, 58, 0.4);
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border-left: 4px solid #00ffff;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: rgba(139, 92, 246, 0.5);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .faq-item h3 {
+            color: #00ffff;
+            font-size: clamp(9px, 1.3vw, 14px);
+            margin: 0 0 15px 0;
+            text-shadow: 0 0 5px rgba(0, 255, 255, 0.3);
+            line-height: 1.4;
+        }
+
+        .faq-item p {
+            font-size: clamp(7px, 1.1vw, 11px);
+            color: #cccccc;
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        /* Links */
+        .email-link {
+            color: #FFD700;
+            text-decoration: none;
+            font-weight: normal;
+            transition: all 0.3s;
+        }
+
+        .email-link:hover {
+            color: #00ffff;
+            text-shadow: 0 0 8px rgba(0, 255, 255, 0.4);
+        }
+
+        /* Section text */
+        .section-text {
+            font-size: clamp(8px, 1.2vw, 12px);
+            color: #ffffff;
+            margin: 15px 0;
+            line-height: 1.6;
+        }
+
+        /* List items */
+        .list-item {
+            font-size: clamp(7px, 1.1vw, 11px);
+            color: #cccccc;
+            margin: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .list-item::before {
+            content: "▶";
+            color: #8B5CF6;
+            position: absolute;
+            left: 0;
+            animation: iconBlink 2s infinite;
+        }
+
+        /* Highlight box */
+        .highlight-box {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid #FFD700;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(255, 215, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .highlight-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(139, 92, 246, 0.2);
+            color: #888;
+            font-size: clamp(6px, 1vw, 8px);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header {
+                top: 15px;
+                left: 15px;
+            }
+
+            .header-logo {
+                width: 50px;
+                height: 50px;
+            }
+
+            .nav-header {
+                margin: 80px auto 30px;
+                padding: 15px;
+            }
+
+            .container {
+                padding: 30px 20px;
+                margin: 0 15px;
+                border-radius: 20px;
+            }
+
+            .page-header {
+                margin-bottom: 30px;
+            }
+
+            .contact-info {
+                padding: 20px;
+                margin: 20px 0;
+            }
+
+            .faq-item {
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+
+            h2 {
+                margin: 30px 0 15px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-header {
+                margin: 70px auto 20px;
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px 15px;
+                margin: 0 10px;
+            }
+
+            .contact-info {
+                padding: 15px;
+            }
+
+            .faq-item {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="bg-animation"></div>
+    <div class="floating-pixels" id="floatingPixels"></div>
+
+    <!-- Header with logo -->
+    <header class="header">
+        <a href="index.html">
+            <img src="assets/logo-1024.png" alt="8bit Chess" class="header-logo">
+        </a>
+    </header>
+
+    <!-- Navigation -->
+    <div class="nav-header">
+        <a href="index.html" class="back-link">← BACK TO MAIN</a>
+    </div>
+    
+    <!-- Main container -->
+    <div class="container">
+        <!-- Page header -->
+        <div class="page-header">
+            <h1 class="page-title">8BIT CHESS</h1>
+            <div class="page-subtitle">PUZZLES</div>
+            <div class="page-tagline">SUPPORT CENTER</div>
+        </div>
+
+        <!-- Contact section -->
+        <div class="contact-info">
+            <h2>CONTACT US</h2>
+            <div class="contact-item">
+                <span class="contact-icon">▶</span>
+                <span><strong>Email:</strong> <a href="mailto:128bit.studios@gmail.com" class="email-link">128bit.studios@gmail.com</a></span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">▶</span>
+                <span><strong>Response Time:</strong> 24-48 hours</span>
+            </div>
+            <div class="contact-item">
+                <span class="contact-icon">▶</span>
+                <span><strong>Developer:</strong> 128 Bit Studios</span>
+            </div>
+        </div>
+
+        <h2>FREQUENTLY ASKED QUESTIONS</h2>
+
+        <div class="faq-item">
+            <h3>How do I restore my premium purchase?</h3>
+            <p>Go to Settings → Restore Purchases. Make sure you're logged into the same Apple ID that made the original purchase.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>I'm not seeing ads removed after purchasing premium</h3>
+            <p>Try restarting the app completely. If ads still appear, use the "Restore Purchases" button in Settings.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>How do I unlock new themes?</h3>
+            <p>Earn coins by solving puzzles, then visit the Theme Store to purchase new themes. Premium users get all themes unlocked instantly!</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>The app is crashing or not working properly</h3>
+            <p>Please try restarting the app and your device. If issues persist, contact us with your device model and iOS version.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>How do hints work?</h3>
+            <p>You get 3 free hints daily. Earn additional hints by solving puzzles without using hints.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>Can I sync my progress across devices?</h3>
+            <p>Currently, progress is stored locally on each device. We're considering cloud sync for future updates.</p>
+        </div>
+
+        <div class="faq-item">
+            <h3>How do I request a refund?</h3>
+            <p>Refunds are handled by Apple. Go to Settings → Apple ID → Media & Purchases → View Account → Purchase History → Find the purchase → Report a Problem.</p>
+        </div>
+
+        <h2>BUG REPORTS</h2>
+        <p class="section-text">Found a bug? Please email us with:</p>
+        <div class="list-item">Your device model (e.g., iPhone 14 Pro)</div>
+        <div class="list-item">iOS version</div>
+        <div class="list-item">App version</div>
+        <div class="list-item">Steps to reproduce the issue</div>
+        <div class="list-item">Screenshots if applicable</div>
+
+        <h2>FEATURE REQUESTS</h2>
+        <p class="section-text">We love hearing your ideas! Send us your suggestions for new features, themes, or improvements.</p>
+
+        <h2>LEAVE A REVIEW</h2>
+        <p class="section-text">Enjoying the game? Please consider leaving a review on the App Store. Your feedback helps us improve and reach more chess puzzle enthusiasts!</p>
+
+        <div class="highlight-box">
+            <p class="section-text"><strong>Still need help?</strong> Don't hesitate to reach out to us at <a href="mailto:128bit.studios@gmail.com" class="email-link">128bit.studios@gmail.com</a></p>
+        </div>
+
+        <div class="footer">
+            © 2024 128 Bit Studios
+        </div>
+    </div>
+
+    <script>
+        // Create floating pixels
+        function createFloatingPixels() {
+            const container = document.getElementById('floatingPixels');
+            for (let i = 0; i < 15; i++) {
+                const pixel = document.createElement('div');
+                pixel.className = 'pixel';
+                pixel.style.left = Math.random() * 100 + '%';
+                pixel.style.animationDelay = Math.random() * 8 + 's';
+                pixel.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                container.appendChild(pixel);
+            }
+        }
+
+        // Initialize
+        createFloatingPixels();
+    </script>
+</body>
+</html>
